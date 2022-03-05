@@ -18,7 +18,7 @@ export default function App() {
 function Example() {
   const { isLoading, error, data } = useQuery("repoData", () =>
     axios
-      .get("https://astroyantra.com/wp-json/wp/v2/posts/")
+      .get("https://blog-cms-backend.herokuapp.com/articles")
       .then((res) => res.data)
   );
 
@@ -35,7 +35,7 @@ function Example() {
         {data?.map((n, index) => {
           return (
             <div key={index}>
-              <main dangerouslySetInnerHTML={{ __html: n.content.rendered }} />
+              <main dangerouslySetInnerHTML={{ __html: n.content }} />
             </div>
           );
         })}
