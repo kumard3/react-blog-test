@@ -1,20 +1,48 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import ReactDOM from "react-dom";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+import axios from "axios";
 import "./index.css";
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter } from "react-router-dom";
+const queryClient = new QueryClient();
 
-ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Example />
+    </QueryClientProvider>
+  );
+}
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+function Example() {
+  const { isLoading, error, data, isFetching } = useQuery("repoData", () =>
+    axios
+      .get("https://astroyantra.com/wp-json/wp/v2/posts/")
+      .then((res) => res.data)
+  );
+
+  if (isLoading) return "Loading...";
+
+  if (error) return "An error has occurred: " + error.message;
+  console.log(data);
+  return (
+    <div className="bg-black min-h-screen text-white/80">
+      <h1 className="text-center text-6xl py-10 ">
+        Remix Basic Data fetching{" "}
+      </h1>
+      <div className="grid justify-center flex-col items-center  ">
+        {data?.map((n, index) => {
+          return (
+            <div key={index}>
+              <main dangerouslySetInnerHTML={{ __html: n.content.rendered }} />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+const rootElement = document.getElementById("root");
+ReactDOM.render(<App />, rootElement);
