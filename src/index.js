@@ -2,7 +2,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
+
 import axios from "axios";
 import "./index.css";
 const queryClient = new QueryClient();
@@ -16,7 +16,7 @@ export default function App() {
 }
 
 function Example() {
-  const { isLoading, error, data, isFetching } = useQuery("repoData", () =>
+  const { isLoading, error, data } = useQuery("repoData", () =>
     axios
       .get("https://astroyantra.com/wp-json/wp/v2/posts/")
       .then((res) => res.data)
